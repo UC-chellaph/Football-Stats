@@ -1,12 +1,13 @@
 import pyodbc
 import pandas as pd
-from pandas import DataFrame        #Useful for dataframe style formatting. Not in use
+from pandas import DataFrame  # Useful for dataframe style formatting. Not in use
 import time
-import jinja2           #Needed for formatting, not currently used
+import jinja2  # Needed for formatting, not currently used
+import Test1
 
 # Local Connection code below
 
-# cnxn_str = ("Driver={SQL Server Native Client 11.0};"
+# connection_str = ("Driver={SQL Server Native Client 11.0};"
 #             "Server=LAPTOP-VKN8AU2E\SQLEXPRESS;"
 #             "Database=Football_Stats;"
 #             "Trusted_Connection=yes;")
@@ -15,31 +16,34 @@ import jinja2           #Needed for formatting, not currently used
 
 print("Loading...")
 
+reader = open("Test1", "r")
 
 username = 'Chellaph'
-password = 'Pa$$w0rd'
+password = reader.readline()
 server = 'it3038c-coursework.database.windows.net'
 driver = '{ODBC Driver 17 for SQL Server}'
 database = 'Football_Stats'
 
-cnxn_str = (
+reader.close()
+
+connection_str = (
         'DRIVER=' + driver + ';SERVER=' + server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password)
 
 # --*----*----*----*----*----*----*----*----*----*----*----*----*----*----*----*----*----*----*----*----*----*----*--
 
 currentMD = 24
 
-cnxn = pyodbc.connect(cnxn_str)  # initialise connection
+connection = pyodbc.connect(connection_str)  # initialise connection
 
 # execute the query and read to a dataframe in Python
 
 
-del cnxn  # close the connection
+del connection  # close the connection
 
 
 # Define method for current fix list
 def get_current_MatchDay():
-    cnxn = pyodbc.connect(cnxn_str)
+    cnxn = pyodbc.connect(connection_str)
     query = ("Select Date, Home_team as [Home Team], Home_Goals_Scored as [Home], Away_Goals_Scored " +
              " as [Away], Away_Team as [Away Team] From dbo.Fixtures_PL_Full where [Round] = " + str(currentMD))
     data = pd.read_sql(query, cnxn)
@@ -53,7 +57,7 @@ def get_current_MatchDay():
 
 # Define method for next fixture list
 def get_next_MatchDay():
-    cnxn = pyodbc.connect(cnxn_str)
+    cnxn = pyodbc.connect(connection_str)
     query = ("Select Date, Home_team as [Home Team], Home_Goals_Scored as [Home], Away_Goals_Scored as [Away]," +
              " Away_Team as [Away Team] From dbo.Fixtures_PL_Full where [Round] = " + str(currentMD + 1))
     data = pd.read_sql(query, cnxn)
@@ -62,7 +66,7 @@ def get_next_MatchDay():
 
 
 def get_selected_MatchDay(matchday):
-    cnxn = pyodbc.connect(cnxn_str)
+    cnxn = pyodbc.connect(connection_str)
     query = ("Select Date, Home_team as [Home Team], Home_Goals_Scored as [Home], Away_Goals_Scored as [Away]," +
              " Away_Team as [Away Team] From dbo.Fixtures_PL_Full where [Round] = " + str(matchday))
     data = pd.read_sql(query, cnxn)
@@ -79,7 +83,7 @@ def get_selected_MatchDay(matchday):
 
 
 def get_standings(league_id):
-    cnxn = pyodbc.connect(cnxn_str)
+    cnxn = pyodbc.connect(connection_str)
     query = ("SELECT [team_short_name] as [Team Name],[points] as [Points],[match_played] as [Played],[won] as [Won]," +
              "[draw] as [Drawn],[lost] as [Lost] ,[goal_diff] as [Goal Diff] ,[goals_scored] as [Goals For] ,[goals_against] as" +
              " [Goals Against] FROM [dbo].[Standings_PL] where league_id = " + str(league_id))
@@ -93,7 +97,7 @@ def get_standings(league_id):
 
 
 def get_team_fix(team_name):
-    cnxn = pyodbc.connect(cnxn_str)
+    cnxn = pyodbc.connect(connection_str)
     query = (
             "Select Date, Home_team as [Home Team], Home_Goals_Scored as [Home], Away_Goals_Scored as [Away], Away_Team as [Away Team]" +
             " From dbo.Fixtures_PL_Full where Home_team = '" + str(team_name) + "' or Away_Team = '" + str(
@@ -184,149 +188,140 @@ while 1:
                "Wolverhampton Wanderers FC\n"
 
     creditString = 'This Application was made by Prateek Chellani as part of the IT3038C - Scripting Languages class\n' \
-                  'Insert Research Links here'
+                   'Insert Research Links here'
 
-    if validCommands.find(userInput):
-        # User Input is Valid
-        if userInput.lower() == 'help' or userInput.lower() == 'get help':
-            print(helpCommand)
+    if userInput.lower() == 'help' or userInput.lower() == 'get help':
+        print(helpCommand)
+        continue
+    elif userInput.lower() == 'next week':
+        print(get_next_MatchDay())
+
+        response = input("Would You like to do something else? (type quit to quit) ")
+        if response.lower() == 'y':
             continue
-        elif userInput.lower() == 'next week':
-            print(get_next_MatchDay())
-
-            response = input("Would You like to do something else? (type quit to quit) ")
-            if response.lower() == 'y':
-                continue
-            elif response.lower() == 'quit' or response.lower() == 'exit':
-                break
-
-        elif userInput.lower() == 'quit':
+        elif response.lower() == 'quit' or response.lower() == 'exit':
             break
 
-        elif userInput.lower() == 'results':
-            print(get_current_MatchDay())
+    elif userInput.lower() == 'quit' or userInput.lower() == 'exit':
+        break
 
-            response = input("Would You like to do something else? (type quit to quit) ")
+    elif userInput.lower() == 'results' or userInput.lower() == 'scores':
+        print(get_current_MatchDay())
 
-            if response.lower() == 'y':
-                continue
-            elif response.lower() == 'quit' or response.lower() == 'exit':
-                break
+        response = input("Would You like to do something else? (type quit to quit) ")
 
-        elif userInput.lower() == 'standings':
-            print(get_standings(1))
-
-            response = input("Would You like to do something else? (type quit to quit) ")
-
-            if response.lower() == 'y':
-                continue
-            elif response.lower() == 'quit' or response.lower() == 'exit':
-                break
-
-        elif userInput.lower() == 'team info':
-            print("I'm sorry, this command is currently unavailable due to formatting errors in the code. "
-                  "It will be fixed in a future patch")
-
-            response = input("Would You like to do something else? (type quit to quit) ")
-
-            if response.lower() == 'y':
-                continue
-            elif response.lower() == 'quit' or response.lower() == 'exit':
-                break
-
-        elif userInput.lower() == 'team list':
-            print(teamList)
+        if response.lower() == 'y':
             continue
+        elif response.lower() == 'quit' or response.lower() == 'exit':
+            break
 
-        elif userInput.lower() == 'credit' or userInput.lower() == 'credits':
-            print(creditString)
+    elif userInput.lower() == 'standings' or userInput.lower() == 'table':
+        print(get_standings(1))
+
+        response = input("Would You like to do something else? (type quit to quit) ")
+
+        if response.lower() == 'y':
             continue
+        elif response.lower() == 'quit' or response.lower() == 'exit':
+            break
 
-        elif userInput.lower() == 'fixtures' or userInput.lower() == 'schedule' or userInput.lower() == 'fix':
-            matchdayOrTeam = input("Please enter a matchday or a team: ")
+    elif userInput.lower() == 'team info':
+        print("I'm sorry, this command is currently unavailable due to formatting errors in the code. "
+              "It will be fixed in a future patch")
 
-            if matchdayOrTeam.lower() == 'arsenal' or matchdayOrTeam.lower() == 'arsenal FC':
-                team = 'Arsenal FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'aston villa' or matchdayOrTeam.lower() == 'aston villa fc' or matchdayOrTeam.lower() == 'villa':
-                print(get_team_fix('Aston Villa FC'))
-            elif matchdayOrTeam.lower() == 'brighton and hove albion' or matchdayOrTeam.lower() == 'brighton' or matchdayOrTeam.lower() == 'brighton & hove' or matchdayOrTeam.lower() == 'brighton and hove':
-                team = 'Brighton & Hove Albion FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'chelsea' or matchdayOrTeam.lower() == 'chelsea fc':
-                team = 'Chelsea FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'burnley' or matchdayOrTeam.lower() == 'burnley fc':
-                team = 'Burnley FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'crystal palace' or matchdayOrTeam.lower() == 'palace' or matchdayOrTeam.lower() == 'cpfc':
-                team = 'Crystal Palace FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'everton' or matchdayOrTeam.lower() == 'everton fc':
-                team = 'Everton FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'fulham' or matchdayOrTeam.lower() == 'fulham fc':
-                team = 'Fulham FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'leeds' or matchdayOrTeam.lower() == 'leeds united' or matchdayOrTeam.lower() == 'lufc':
-                team = 'Leeds United FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'liverpool fc' or matchdayOrTeam.lower() == 'liverpool':
-                team = 'Liverpool FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'man city' or matchdayOrTeam.lower() == 'manchester city' or matchdayOrTeam.lower() == 'mcfc':
-                team = 'Manchester City FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'man united' or matchdayOrTeam.lower() == 'manu' or matchdayOrTeam.lower() == 'man u' or matchdayOrTeam.lower() == 'manchester united' or matchdayOrTeam.lower() == 'mufc' or matchdayOrTeam.lower() == 'manchester united fc':
-                team = 'Manchester United FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'newcastle' or matchdayOrTeam.lower() == 'newcastle united fc' or matchdayOrTeam.lower() == 'newcastle united':
-                team = 'Newcastle United FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'sheffield' or matchdayOrTeam.lower() == 'sheffield united':
-                team = 'Sheffield United FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'southampton' or matchdayOrTeam.lower() == 'southampton fc':
-                team = 'Southampton FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'tottenham fc' or matchdayOrTeam.lower() == 'tottenham hotspur' or matchdayOrTeam.lower() == 'thfc' or matchdayOrTeam.lower() == 'spurs' or matchdayOrTeam.lower() == 'spurs fc' or matchdayOrTeam.lower() == 'tottenham' or matchdayOrTeam.lower() == 'best team in london':
-                team = 'Tottenham Hotspur FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'west brom' or matchdayOrTeam.lower() == 'west bromwich' or matchdayOrTeam.lower() == 'west bromwich albion' or matchdayOrTeam.lower() == 'wbafc':
-                team = 'West Bromwich Albion FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'west ham' or matchdayOrTeam.lower() == 'west ham united' or matchdayOrTeam.lower() == 'west ham united fc' or matchdayOrTeam.lower() == 'whufc':
-                team = 'West Ham United FC'
-                print(get_team_fix(team))
-            elif matchdayOrTeam.lower() == 'wolves' or matchdayOrTeam.lower() == 'wolverhampton wanderers FC' or matchdayOrTeam.lower() == 'wolverhampton Wanderers':
-                team = 'Wolverhampton Wanderers FC'
-                print(get_team_fix(team))
+        response = input("Would You like to do something else? (type quit to quit) ")
 
-            elif 5 == 5:
-                try:
-                    matchDay = int(matchdayOrTeam)
-                    print(get_selected_MatchDay(matchDay))
-                except ValueError:
-                    print(
-                        "That is not a valid response. Please only enter a number between 1 and 38 or a valid team name " \
-                        "Type Team List on the main screen for a full list of valid team names")
-                    continue
+        if response.lower() == 'y':
+            continue
+        elif response.lower() == 'quit' or response.lower() == 'exit':
+            break
 
-            response = input("Would You like to do something else? (type quit to quit) ")
+    elif userInput.lower() == 'team list':
+        print(teamList)
+        continue
 
-            if response.lower() == 'y':
-                continue
-            elif response.lower() == 'quit' or response.lower() == 'exit':
-                break
+    elif userInput.lower() == 'credit' or userInput.lower() == 'credits':
+        print(creditString)
+        continue
+
+    elif userInput.lower() == 'fixtures' or userInput.lower() == 'schedule' or userInput.lower() == 'fix':
+        matchdayOrTeam = input("Please enter a matchday or a team: ")
+
+        if matchdayOrTeam.lower() == 'arsenal' or matchdayOrTeam.lower() == 'arsenal FC':
+            team = 'Arsenal FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'aston villa' or matchdayOrTeam.lower() == 'aston villa fc' or matchdayOrTeam.lower() == 'villa':
+            print(get_team_fix('Aston Villa FC'))
+        elif matchdayOrTeam.lower() == 'brighton and hove albion' or matchdayOrTeam.lower() == 'brighton' or matchdayOrTeam.lower() == 'brighton & hove' or matchdayOrTeam.lower() == 'brighton and hove':
+            team = 'Brighton & Hove Albion FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'chelsea' or matchdayOrTeam.lower() == 'chelsea fc':
+            team = 'Chelsea FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'burnley' or matchdayOrTeam.lower() == 'burnley fc':
+            team = 'Burnley FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'crystal palace' or matchdayOrTeam.lower() == 'palace' or matchdayOrTeam.lower() == 'cpfc':
+            team = 'Crystal Palace FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'everton' or matchdayOrTeam.lower() == 'everton fc':
+            team = 'Everton FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'fulham' or matchdayOrTeam.lower() == 'fulham fc':
+            team = 'Fulham FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'leeds' or matchdayOrTeam.lower() == 'leeds united' or matchdayOrTeam.lower() == 'lufc':
+            team = 'Leeds United FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'liverpool fc' or matchdayOrTeam.lower() == 'liverpool':
+            team = 'Liverpool FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'man city' or matchdayOrTeam.lower() == 'manchester city' or matchdayOrTeam.lower() == 'mcfc':
+            team = 'Manchester City FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'man united' or matchdayOrTeam.lower() == 'manu' or matchdayOrTeam.lower() == 'man u' or matchdayOrTeam.lower() == 'manchester united' or matchdayOrTeam.lower() == 'mufc' or matchdayOrTeam.lower() == 'united' or matchdayOrTeam.lower() == 'manchester united fc':
+            team = 'Manchester United FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'newcastle' or matchdayOrTeam.lower() == 'newcastle united fc' or matchdayOrTeam.lower() == 'newcastle united':
+            team = 'Newcastle United FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'sheffield' or matchdayOrTeam.lower() == 'sheffield united':
+            team = 'Sheffield United FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'southampton' or matchdayOrTeam.lower() == 'southampton fc':
+            team = 'Southampton FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'tottenham fc' or matchdayOrTeam.lower() == 'tottenham hotspur' or matchdayOrTeam.lower() == 'thfc' or matchdayOrTeam.lower() == 'spurs' or matchdayOrTeam.lower() == 'spurs fc' or matchdayOrTeam.lower() == 'tottenham' or matchdayOrTeam.lower() == 'best team in london':
+            team = 'Tottenham Hotspur FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'west brom' or matchdayOrTeam.lower() == 'west bromwich' or matchdayOrTeam.lower() == 'west bromwich albion' or matchdayOrTeam.lower() == 'wbafc':
+            team = 'West Bromwich Albion FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'west ham' or matchdayOrTeam.lower() == 'west ham united' or matchdayOrTeam.lower() == 'west ham united fc' or matchdayOrTeam.lower() == 'whufc':
+            team = 'West Ham United FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() == 'wolves' or matchdayOrTeam.lower() == 'wolverhampton wanderers FC' or matchdayOrTeam.lower() == 'wolverhampton Wanderers':
+            team = 'Wolverhampton Wanderers FC'
+            print(get_team_fix(team))
+
         elif 5 == 5:
-            print("I'm sorry, I don't understand that command. Please type 'help' to get a list of valid commands")
-            continue
+            try:
+                matchDay = int(matchdayOrTeam)
+                print(get_selected_MatchDay(matchDay))
+            except ValueError:
+                print(
+                    "That is not a valid response. Please only enter a number between 1 and 38 or a valid team name "
+                    "Type Team List on the main screen for a full list of valid team names")
+                continue
 
-    else:
-        # User input is invalid
-        (
-            print("I'm sorry, I don't understand that command. Please type 'help' to get a list of valid commands")
-        )
+        response = input("Would You like to do something else? (type quit to quit) ")
+
+        if response.lower() == 'y':
+            continue
+        elif response.lower() == 'quit' or response.lower() == 'exit':
+            break
+    elif 5 == 5:
+        print("I'm sorry, I don't understand that command. Please type 'help' to get a list of valid commands")
         continue
 
 print("Have a great day!")
