@@ -1,20 +1,13 @@
 # Football-Stats
-# Created by Prateek Chellani as part of the IT3038C course at the University of Cincinnati for the first Project. 
 
-This program connects to an Azure database built in SQL Server and retrieves scores, results, fixtures and standings for the world's leading football league, the English Premier League
-# More Leagues to be added soon. 
+This program was designed by Prateek Chellani during his time at the University of Cincinnati as part of a class project. It connects to an Azure database built in SQL Server and retrieves scores, results, fixtures and standings for the world's leading football league, the English Premier League
+
+*More Leagues to be added soon.*
 
  -----
  # Valid Commands and Aliases 
 
 Type Help after loading into the Program for a list of valid commands, several of which have aliases as well. 
-|**Person**| | |
-  |-------|--|--|
-  |*Fields*|||
-  ||`String ID;`| |
-  ||`String firstName;`| |
-  ||`String lastName;`| |
-  ||`String title;`| Mr., Mrs., Ms., Prof., Dr., Hon., ... |
 
 |**Valid Commands** | **Result**                                                   | **Aliases**                |
 |-------------------|--------------------------------------------------------------|----------------------------|
