@@ -2,6 +2,8 @@
 
 This program was designed by Prateek Chellani during his time at the University of Cincinnati as part of a class project. It connects to an Azure database built in SQL Server and retrieves scores, results, fixtures and standings for the world's leading football league, the English Premier League
 
+![alt text](https://imgur.com/5VljUXw.gif "Demo by Prateek Chellani")
+
 *More Leagues to be added soon.*
 
  -----
