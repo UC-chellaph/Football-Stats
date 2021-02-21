@@ -17,6 +17,7 @@ Type Help after loading into the Program for a list of valid commands, several o
   ||`String title;`| Mr., Mrs., Ms., Prof., Dr., Hon., ... |
 
 |**Valid Commands** | **Result**                                                   | **Aliases**                |
+|-------------------|--------------------------------------------------------------|----------------------------|
 |Fixtures           | Get Fixtures or results for a specific matchday or team      | Fix, Schedule              |
 |Next Week          | Get Next Week's Fixtures                                     |                            |
 |Results            | Get This Week's Results or Fixtures                          | Scores, Score              |
