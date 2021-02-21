@@ -21,10 +21,15 @@ Type Help after loading into the Program for a list of valid commands, several o
 |Credits            | View Credits for this Project                                | Credit                     |
 |Quit               | Close the Program                                            | Exit                       |
 
+
+ -----
+
 # Supported Teams
 All 20 teams registered in the English Premier League for the 2020-21 season valid inputs. Entering their official name (As displayed in team list) is preferred.
 However, most popular abbreviations such as 'Spurs' for Tottenham Hotspur FC, or ManUtd for Manchester United FC are also accepted. 
 
+ -----
+ 
 # Features
 
 - [X] All 20 Premier League Teams.
@@ -56,6 +61,7 @@ However, most popular abbreviations such as 'Spurs' for Tottenham Hotspur FC, or
   - I strongly recommend using Python2 rather than Python3.
 6. And this one time set-up is now complete. Following this, you can launch the file as you normally would. 
 
+ -----
 # Troubleshooting
 
 1. I keep getting the following error - Data source name not found and no default driver specified
