@@ -53,12 +53,12 @@ However, most popular abbreviations such as 'Spurs' for Tottenham Hotspur FC, or
 1. Clone this Repository. Can be done through CLI or via Github Desktop. 
 2. Ensure that you have Python installed. (pip install python on Windows, yum -y install python on CentOS)
 3. Install the required imports and packages - pandas, datetime and pyodbc. (pip install pyodbc/pandas/datetime)
-  - Ensure that you install these in the correct folder (where you have installed Python, and intend to run the app from)
+   - Ensure that you install these in the correct folder (where you have installed Python, and intend to run the app from)
 4. Install the ODBC Driver from https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver15
-  - Install the Microsoft ODBC Driver 17 for SQL Server and leave default settings. 
-  - Open the installed program (OODBC Data Sources) and add the SQL Server driver from the list. Again, leave to default settings, and set name to Microsoft ODBC Driver 17 for SQL Server. Make sure to use SQL Server authentication rather than Windows Auth. 
+   - Install the Microsoft ODBC Driver 17 for SQL Server and leave default settings. 
+   - Open the installed program (OODBC Data Sources) and add the SQL Server driver from the list. Again, leave to default settings, and set name to Microsoft ODBC Driver 17 for SQL Server. Make sure to use SQL Server authentication rather than Windows Auth. 
 5. With the configuration done, load up your script through Python. You can either browse the the directory where your main.py is located and open it in Python, or type python main.py into the CLI in the correct folder. 
-  - I strongly recommend using Python2 rather than Python3.
+   - I strongly recommend using Python2 rather than Python3.
 6. And this one time set-up is now complete. Following this, you can launch the file as you normally would. 
 
  -----
