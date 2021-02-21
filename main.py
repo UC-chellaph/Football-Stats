@@ -43,11 +43,11 @@ del connection  # close the connection
 
 # Define method for current fix list
 def get_current_MatchDay():
-    cnxn = pyodbc.connect(connection_str)
+    connection = pyodbc.connect(connection_str)
     query = ("Select Date, Home_team as [Home Team], Home_Goals_Scored as [Home], Away_Goals_Scored " +
              " as [Away], Away_Team as [Away Team] From dbo.Fixtures_PL_Full where [Round] = " + str(currentMD))
-    data = pd.read_sql(query, cnxn)
-    del cnxn
+    data = pd.read_sql(query, connection)
+    del connection
     return data
 
 
@@ -57,20 +57,20 @@ def get_current_MatchDay():
 
 # Define method for next fixture list
 def get_next_MatchDay():
-    cnxn = pyodbc.connect(connection_str)
+    connection = pyodbc.connect(connection_str)
     query = ("Select Date, Home_team as [Home Team], Home_Goals_Scored as [Home], Away_Goals_Scored as [Away]," +
              " Away_Team as [Away Team] From dbo.Fixtures_PL_Full where [Round] = " + str(currentMD + 1))
-    data = pd.read_sql(query, cnxn)
-    del cnxn
+    data = pd.read_sql(query, connection)
+    del connection
     return data
 
 
 def get_selected_MatchDay(matchday):
-    cnxn = pyodbc.connect(connection_str)
+    connection = pyodbc.connect(connection_str)
     query = ("Select Date, Home_team as [Home Team], Home_Goals_Scored as [Home], Away_Goals_Scored as [Away]," +
              " Away_Team as [Away Team] From dbo.Fixtures_PL_Full where [Round] = " + str(matchday))
-    data = pd.read_sql(query, cnxn)
-    del cnxn
+    data = pd.read_sql(query, connection)
+    del connection
     return data
 
 
@@ -83,12 +83,12 @@ def get_selected_MatchDay(matchday):
 
 
 def get_standings(league_id):
-    cnxn = pyodbc.connect(connection_str)
+    connection = pyodbc.connect(connection_str)
     query = ("SELECT [team_short_name] as [Team Name],[points] as [Points],[match_played] as [Played],[won] as [Won]," +
              "[draw] as [Drawn],[lost] as [Lost] ,[goal_diff] as [Goal Diff] ,[goals_scored] as [Goals For] ,[goals_against] as" +
              " [Goals Against] FROM [dbo].[Standings_PL] where league_id = " + str(league_id))
-    data = pd.read_sql(query, cnxn)
-    del cnxn
+    data = pd.read_sql(query, connection)
+    del connection
     return data
 
 
@@ -97,13 +97,13 @@ def get_standings(league_id):
 
 
 def get_team_fix(team_name):
-    cnxn = pyodbc.connect(connection_str)
+    connection = pyodbc.connect(connection_str)
     query = (
             "Select Date, Home_team as [Home Team], Home_Goals_Scored as [Home], Away_Goals_Scored as [Away], Away_Team as [Away Team]" +
             " From dbo.Fixtures_PL_Full where Home_team = '" + str(team_name) + "' or Away_Team = '" + str(
         team_name) + "'")
-    data = pd.read_sql(query, cnxn)
-    del cnxn
+    data = pd.read_sql(query, connection)
+    del connection
     return data
 
 
