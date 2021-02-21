@@ -3,7 +3,6 @@ import pandas as pd
 from pandas import DataFrame  # Useful for dataframe style formatting. Not in use
 import time
 import jinja2  # Needed for formatting, not currently used
-import Test1
 
 # Local Connection code below
 
@@ -16,7 +15,7 @@ import Test1
 
 print("Loading...")
 
-reader = open("Test1", "r")
+reader = open("Test1.txt", "r")
 
 username = 'Chellaph'
 password = reader.readline()
