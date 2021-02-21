@@ -169,6 +169,7 @@ print(
 
 print("-------------------------------------------------------------------------------------------------")
 
+
 # Define method for current fix list
 def get_current_MatchDay():
     connection = pyodbc.connect(connection_str)
@@ -323,7 +324,7 @@ while 1:
     elif userInput.lower() == 'quit' or userInput.lower() == 'exit':
         break
 
-    elif userInput.lower() == 'results' or userInput.lower() == 'scores' or userInput.lower() == 'score':
+    elif userInput.lower() == 'results' or userInput.lower() == 'scores' or userInput.lower() == 'this week' or userInput.lower() == 'score':
         print(get_current_MatchDay())
         print("-------------------------------------------------------------------------------------------------")
         response = input("Would You like to do something else? (type quit to quit) ")
