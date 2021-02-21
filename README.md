@@ -8,6 +8,13 @@ This program connects to an Azure database built in SQL Server and retrieves sco
  # Valid Commands and Aliases 
 
 Type Help after loading into the Program for a list of valid commands, several of which have aliases as well. 
+|**Person**| | |
+  |-------|--|--|
+  |*Fields*|||
+  ||`String ID;`| |
+  ||`String firstName;`| |
+  ||`String lastName;`| |
+  ||`String title;`| Mr., Mrs., Ms., Prof., Dr., Hon., ... |
 
 |**Valid Commands** | **Result**                                                   | **Aliases**                |
 |Fixtures           | Get Fixtures or results for a specific matchday or team      | Fix, Schedule              |
