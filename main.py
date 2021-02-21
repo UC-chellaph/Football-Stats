@@ -167,6 +167,7 @@ print('Hello! \n')
 print(
     "Today's date is " + str(today) + '. This means the current match week we are on is Match Week: ' + str(currentMD))
 
+print("-------------------------------------------------------------------------------------------------")
 
 # Define method for current fix list
 def get_current_MatchDay():
@@ -312,7 +313,7 @@ while 1:
         continue
     elif userInput.lower() == 'next week':
         print(get_next_MatchDay())
-
+        print("-------------------------------------------------------------------------------------------------")
         response = input("Would You like to do something else? (type quit to quit) ")
         if response.lower() == 'y':
             continue
@@ -324,7 +325,7 @@ while 1:
 
     elif userInput.lower() == 'results' or userInput.lower() == 'scores' or userInput.lower() == 'score':
         print(get_current_MatchDay())
-
+        print("-------------------------------------------------------------------------------------------------")
         response = input("Would You like to do something else? (type quit to quit) ")
 
         if response.lower() == 'y':
@@ -334,7 +335,7 @@ while 1:
 
     elif userInput.lower() == 'standings' or userInput.lower() == 'table':
         print(get_standings(1))
-
+        print("-------------------------------------------------------------------------------------------------")
         response = input("Would You like to do something else? (type quit to quit) ")
 
         if response.lower() == 'y':
@@ -345,7 +346,7 @@ while 1:
     elif userInput.lower() == 'team info':
         print("I'm sorry, this command is currently unavailable due to formatting errors in the code. "
               "It will be fixed in a future patch")
-
+        print("-------------------------------------------------------------------------------------------------")
         response = input("Would You like to do something else? (type quit to quit) ")
 
         if response.lower() == 'y':
@@ -355,10 +356,12 @@ while 1:
 
     elif userInput.lower() == 'team list':
         print(teamList)
+        print("-------------------------------------------------------------------------------------------------")
         continue
 
     elif userInput.lower() == 'credit' or userInput.lower() == 'credits':
         print(creditString)
+        print("-------------------------------------------------------------------------------------------------")
         continue
 
     elif userInput.lower() == 'fixtures' or userInput.lower() == 'schedule' or userInput.lower() == 'fix':
