@@ -11,17 +11,18 @@ This program was designed by Prateek Chellani during his time at the University 
 
 Type Help after loading into the Program for a list of valid commands, several of which have aliases as well. 
 
-|**Valid Commands** | **Result**                                                   | **Aliases**                |
-|-------------------|--------------------------------------------------------------|----------------------------|
-|Fixtures           | Get Fixtures or results for a specific matchday or team      | Fix, Schedule              |
-|Next Week          | Get Next Week's Fixtures                                     |                            |
-|Results            | Get This Week's Results or Fixtures                          | Scores, Score, This Week   |
-|Standings          | View the current table                                       | Table                      |
-|Team Info          | Get Info about a team (Currently Unavailable)                |                            |
-|Help               | Get this list of commands                                    | Get Help                   |
-|Team List          | Full list of acceptable teams with spellings                 |                            |
-|Credits            | View Credits for this Project                                | Credit                     |
-|Quit               | Close the Program                                            | Exit                       |
+|**Valid Commands** | **Result**                                                   | **Aliases**                | **Version Added** |
+|-------------------|--------------------------------------------------------------|----------------------------|-------------------|
+|Fixtures           | Get Fixtures or results for a specific matchday or team      | Fix, Schedule              |-----Version 1-----|
+|Next Week          | Get Next Week's Fixtures                                     |                            |-----Version 1-----|
+|Results            | Get This Week's Results or Fixtures                          | Scores, Score, This Week   |-----Version 1-----|
+|All Fixtures       | Get a team's results from all competitions - from SofaScore  | AllFix, full fix           |-----Version 2-----|
+|Standings          | View the current table                                       | Table                      |-----Version 1-----|
+|Team Info          | Get Info about a team (Currently Unavailable)                |                            |-----Version 1-----|
+|Help               | Get this list of commands                                    | Get Help                   |-----Version 1-----|
+|Team List          | Full list of acceptable teams with spellings                 |                            |-----Version 1-----|
+|Credits            | View Credits for this Project                                | Credit                     |-----Version 1-----|
+|Quit               | Close the Program                                            | Exit                       |-----Version 1-----|
 
 
  -----
@@ -35,7 +36,7 @@ However, most popular abbreviations such as 'Spurs' for Tottenham Hotspur FC, or
 # Features
 
 - [X] All 20 Premier League Teams.
-- [X] 380 matches covered over 38 weeks.
+- [X] 380 league matches covered over 38 weeks.
 - [X] Weekly score updates.
 - [X] Automated Match day selection.
 - [X] Multiple team and command aliases to include all popular nicknames and abbreviations
@@ -43,9 +44,11 @@ However, most popular abbreviations such as 'Spurs' for Tottenham Hotspur FC, or
 - [X] Input Error handling.
 - [X] Ability to perform multiple commands without having to restart the program. 
 - [X] Compatible with Windows, Mac, CentOS Linux and Ubuntu
+- [X] Results from all competitions, including the FA Cup, League Cup, and Continental Competitions
+- [X] Live results retrieval from SofaScore.com - Only certain commands. 
 - [ ] Premier League Logos - To be added in a future update
 - [ ] Team Stats and recent form - To be added in a future update
-- [ ] Live score retrieval using APIs - To be added in a future update
+- [ ] Live score retrieval using APIs/Web Scraping - Partially incorporated. 
 - [ ] Individual Player Stats - No current incorporation plans
 ----
 
@@ -54,7 +57,7 @@ However, most popular abbreviations such as 'Spurs' for Tottenham Hotspur FC, or
 
 1. Clone this Repository. Can be done through CLI or via Github Desktop. 
 2. Ensure that you have Python installed. (pip install python on Windows, yum -y install python on CentOS)
-3. Install the required imports and packages - pandas, datetime and pyodbc. (pip install pyodbc/pandas/datetime)
+3. Install the required imports and packages - pandas, datetime, pyodbc, requests, bs4 (BeautifulSoup). (pip install pyodbc/pandas/datetime/etc.)
    - Ensure that you install these in the correct folder (where you have installed Python, and intend to run the app from)
 4. Install the ODBC Driver from https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver15
    - Install the Microsoft ODBC Driver 17 for SQL Server and leave default settings. 
@@ -70,7 +73,7 @@ However, most popular abbreviations such as 'Spurs' for Tottenham Hotspur FC, or
 1. **I keep getting the following error - Data source name not found and no default driver specified**
    - Check your ODBC installations. Did you follow through all steps under step 4 of Installation instructions? Check your driver name. 
    - If this doesn't help, try changing the connection string in the Python Script. There is an alternate connection string provided and commented out. Use that. 
-2. **I get the error 'Failed to import Pandas/Pyodbc/datetime**
+2. **I get the error 'Failed to import Pandas/Pyodbc/datetime/Requests/BS4**
    - Have you installed the required packages? Are the in the correct location?
    - If yes, and you still seem to be getting errors for pyodbc, try running the script in Python2 (This is the VEnv that packages install in by default)
 3. **I keep getting the error - failed to authenticate user Chellaph**
