@@ -1,10 +1,9 @@
 import pyodbc
 import pandas as pd
-# from pandas import DataFrame  # Useful for dataframe style formatting. Not in use
 import time
 from datetime import date
-
-# import jinja2  # Needed for formatting, not currently used
+import requests
+from bs4 import BeautifulSoup as bs
 
 # Local Connection code below
 
@@ -83,6 +82,8 @@ GW35 = date(2021, 5, 6)
 GW36 = date(2021, 5, 10)
 GW37 = date(2021, 5, 13)
 GW38 = date(2021, 5, 21)
+
+# Defining Current MD
 
 currentMD = 1
 
@@ -170,6 +171,97 @@ print(
 print("-------------------------------------------------------------------------------------------------")
 
 
+def getAllCompResults(teamname):
+    if teamname in arsenalAliases:
+        team1name = 'Arsenal'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=142&comp_id=1'
+    elif teamname in villaAliases:
+        team1name = 'Aston Villa'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=154&comp_id=1'
+    elif teamname in brightonAliases:
+        team1name = 'Brighton'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=381&comp_id=1'
+    elif teamname in chelseaAliases:
+        team1name = 'Chelsea'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=536&comp_id=1'
+    elif teamname in burnleyAliases:
+        team1name = 'Burnley'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=435&comp_id=1'
+    elif teamname in palaceAliases:
+        team1name = 'Crystal Palace'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=646&comp_id=1'
+    elif teamname in evertonAliases:
+        team1name = 'Everton'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=942&comp_id=1'
+    elif teamname in fulhamAliases:
+        team1name = 'Fulham'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=1055&comp_id=1'
+    elif teamname in leedsAliases:
+        team1name = 'Leeds'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=1524&comp_id=1'
+    elif teamname in leicesterAliases:
+        team1name = 'Leicester'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=1527&comp_id=1'
+    elif teamname in liverpoolAliases:
+        team1name = 'Liverpool'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=1563&comp_id=1'
+    elif teamname in cityAliases:
+        team1name = 'Man City'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=1718&comp_id=1'
+    elif teamname in unitedAliases:
+        team1name = 'Man Utd'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=1724&comp_id=1'
+    elif teamname in newcastleAliases:
+        team1name = 'Newcastle'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=1823&comp_id=1'
+    elif teamname in sheffieldAliases:
+        team1name = 'Sheffield United'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=2328&comp_id=1'
+    elif teamname in southamptonAliases:
+        team1name = 'Southampton'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=2471&comp_id=1'
+    elif teamname in spursAliases:
+        team1name = 'Spurs'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=2590&comp_id=1'
+    elif teamname in westBromAliases:
+        team1name = 'West Brom'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=2744&comp_id=1'
+    elif teamname in westHamAliases:
+        team1name = 'West Ham'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=2802&comp_id=1'
+    elif teamname in wolvesAliases:
+        team1name = 'Wolves'
+        link = 'https://www.soccerbase.com/teams/team.sd?team_id=2848&comp_id=1'
+    else:
+        print(
+            "That is not a valid response. Please enter a valid team name "
+            "Type Team List on the main screen for a full list of valid team names")
+        return
+
+    consolidated = []
+    print('Acquiring live %s data...' % team1name)
+
+    headers = ['Team', 'Competition', 'Home Team', 'Home Score', 'Away Team', 'Away Score', 'Date Keep']
+    r = requests.get('%s&teamTabs=results' % link)
+    soup = bs(r.content, 'html.parser')
+
+    h_scores = [int(i.text) for i in soup.select('.score a em:first-child')]
+    a_scores = [int(i.text) for i in soup.select('.score a em + em')]
+
+    limit = len(a_scores)
+    team1name = [team1name for i in soup.select('.tournament', limit=limit)]
+    comps = [i.text for i in soup.select('.tournament a', limit=limit)]
+    dates = [i.text for i in soup.select('.dateTime .hide', limit=limit)]
+    h_teams = [i.text for i in soup.select('.homeTeam a', limit=limit)]
+    a_teams = [i.text for i in soup.select('.awayTeam a', limit=limit)]
+
+    df = pd.DataFrame(list(zip(team1name, comps, h_teams, h_scores, a_teams, a_scores, dates)),
+                      columns=headers)
+    consolidated.append(df)
+
+    print(pd.concat(consolidated))
+
+
 # Define method for current fix list
 def get_current_MatchDay():
     connection = pyodbc.connect(connection_str)
@@ -245,7 +337,7 @@ def get_team_fix(team_name):
 #     goalsConceded = str(pd.read_sql(
 #         ("SELECT [goals_against] FROM [dbo].[Standings_PL] where team_full_name = '" + team_official_name + "'"), cnxn))
 #     points = str(pd.read_sql(
-#             ("SELECT [points] FROM [dbo].[Standings_PL] where team_full_name = '" + team_official_name + "'"), cnxn))
+#             ("SELECT [points] FROM [dbo].[Standings_PL] where team_full_nam = '" + team_official_name + "'"), cnxn))
 #
 #     del cnxn
 #
@@ -261,6 +353,35 @@ def get_team_fix(team_name):
 # print(var2)
 
 
+'-------------------------------'
+
+# Defining Aliases list
+
+arsenalAliases = ["arsenal", "arsenal fc", "gunners"]
+villaAliases = ['aston villa', 'aston villa fc', 'villa', 'villains', 'avfc']
+brightonAliases = ['brighton and hove albion', 'brighton', 'brighton & hove', 'brighton and hove', 'bhafc']
+chelseaAliases = ['chelsea', 'chelsea fc', 'blues']
+burnleyAliases = ['burnley', 'burley fc', 'clarets']
+palaceAliases = ['palace', 'crystal palace', 'crystal palace fc', 'cpfc', 'eagles']
+evertonAliases = ['everton', 'toffees', 'everton fc']
+fulhamAliases = ['fulham', 'fulham fc']
+leedsAliases = ['leeds', 'leeds united', 'leeds united fc', 'lufc']
+leicesterAliases = ['leicester city', 'leicester city fc', 'lcfc', 'foxes', 'leicester']
+liverpoolAliases = ['liverpool', 'liverpool fc', 'lfc', 'reds', 'kop']
+cityAliases = ['city', 'mancity', 'man city', 'manchester city', 'manchester city fc', 'mcfc', 'cityzens']
+unitedAliases = ['man united', 'manu', 'manchester united', 'manchester united fc', 'red devils', 'mufc']
+newcastleAliases = ['newcastle', 'newcastle united', 'newcastle united', 'nufc']
+sheffieldAliases = ['sheffield united', 'blades', 'sheffield united fc', 'sufc']
+southamptonAliases = ['southampton', 'southampton fc', 'saints', 'soton']
+spursAliases = ['tottenham fc', 'tottenham hotspur', 'thfc', 'spurs', 'spurs fc', 'lilywhites', 'tottenham',
+                'best team in london']
+westBromAliases = ['west bromwich albion', 'west bromwich albion fc', 'wbafc', 'baggies', 'west brom',
+                   'west brom albion']
+westHamAliases = ['west ham', 'west ham united', 'west ham united fc', 'west ham fc', 'whufc', 'hammers', 'irons']
+wolvesAliases = ['wolverhampton wanderers fc', 'wolverhampton wanderers', 'wolves', 'wfc']
+
+# Main Method
+
 while 1:
     userInput = input('What would you like to do today?\n')
     validCommands = ' Fixtures Schedule Results Standings Team Info Table Get Help'
@@ -271,10 +392,12 @@ while 1:
                   "Results : Get This Week's Results or Fixtures\n" \
                   "Standings : View the current table\n" \
                   "Team Info : Get Info about a team (Currently Unavailable)\n" \
+                  "Full Fixtures : Get a Premier League team's results from all competitions (Retrieved live)\n" \
                   "Help : This Command\n" \
                   "Team List: Full list of acceptable teams with spellings\n" \
                   "Credits : View Credits for this Project\n" \
-                  "Quit : Close the Program"
+                  "Quit : Close the Program\n" \
+                  "For more detailed information on each command, please read the ReadMe file at https://github.com/UC-chellaph/Football-Stats"
 
     teamList = "Here is a full list of Premier League teams:\n" \
                "Arsenal FC\n" \
@@ -306,6 +429,8 @@ while 1:
                    'Inserting data into Pandas Dataframes - https://docs.microsoft.com/en-us/sql/machine-learning/data-exploration/python-dataframe-sql-server?view=sql-server-ver15\n' \
                    'While the Database was created in SQLServer (Hosted on Azure) using SSMS, the intial list of fixtures was imported from this CSV:  https://footystats.org/download-stats-csv\n' \
                    'https://github.com/footballcsv/england was also useful for Premier League Fixtures\n' \
+                   'A lot of the scraping help (And code) was taken from https://stackoverflow.com/questions/59024776/how-to-scrape-football-results-from-sofascore-using-python \n' \
+                   'https://www.kdnuggets.com/2020/11/build-football-dataset-web-scraping.html and https://www.geeksforgeeks.org/implementing-web-scraping-python-beautiful-soup/ were also looked at for understanding web scraping \n' \
                    'Lastly, several other links, StackOverflow responses and Youtube tutorials were used to create this program\n' \
                    'For further clarification or queries, please reach out to me at prateekchellani@gmail.com\n\n'
 
@@ -365,63 +490,77 @@ while 1:
         print("-------------------------------------------------------------------------------------------------")
         continue
 
+    elif userInput.lower() == 'allfix' or userInput.lower() == 'full fix' or userInput.lower() == 'full fixtures':
+        teamName = input("Please enter a team: ")
+        getAllCompResults(teamName.lower())
+        print("-------------------------------------------------------------------------------------------------")
+        response = input("Would You like to do something else? (type quit to quit) ")
+
+        if response.lower() == 'y':
+            continue
+        elif response.lower() == 'quit' or response.lower() == 'exit':
+            break
+
     elif userInput.lower() == 'fixtures' or userInput.lower() == 'schedule' or userInput.lower() == 'fix':
         matchdayOrTeam = input("Please enter a matchday or a team: ")
 
-        if matchdayOrTeam.lower() == 'arsenal' or matchdayOrTeam.lower() == 'arsenal FC':
+        if matchdayOrTeam.lower() in arsenalAliases:
             team = 'Arsenal FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'aston villa' or matchdayOrTeam.lower() == 'aston villa fc' or matchdayOrTeam.lower() == 'villa':
+        elif matchdayOrTeam.lower() in villaAliases:
             print(get_team_fix('Aston Villa FC'))
-        elif matchdayOrTeam.lower() == 'brighton and hove albion' or matchdayOrTeam.lower() == 'brighton' or matchdayOrTeam.lower() == 'brighton & hove' or matchdayOrTeam.lower() == 'brighton and hove':
+        elif matchdayOrTeam.lower() in brightonAliases:
             team = 'Brighton & Hove Albion FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'chelsea' or matchdayOrTeam.lower() == 'chelsea fc':
+        elif matchdayOrTeam.lower() in chelseaAliases:
             team = 'Chelsea FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'burnley' or matchdayOrTeam.lower() == 'burnley fc':
+        elif matchdayOrTeam.lower() in burnleyAliases:
             team = 'Burnley FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'crystal palace' or matchdayOrTeam.lower() == 'palace' or matchdayOrTeam.lower() == 'cpfc':
+        elif matchdayOrTeam.lower() in palaceAliases:
             team = 'Crystal Palace FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'everton' or matchdayOrTeam.lower() == 'everton fc':
+        elif matchdayOrTeam.lower() in evertonAliases:
             team = 'Everton FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'fulham' or matchdayOrTeam.lower() == 'fulham fc':
+        elif matchdayOrTeam.lower() in fulhamAliases:
             team = 'Fulham FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'leeds' or matchdayOrTeam.lower() == 'leeds united' or matchdayOrTeam.lower() == 'lufc':
+        elif matchdayOrTeam.lower() in leedsAliases:
             team = 'Leeds United FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'liverpool fc' or matchdayOrTeam.lower() == 'liverpool':
+        elif matchdayOrTeam.lower() in leicesterAliases:
+            team = 'Leicester City FC'
+            print(get_team_fix(team))
+        elif matchdayOrTeam.lower() in liverpoolAliases:
             team = 'Liverpool FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'man city' or matchdayOrTeam.lower() == 'manchester city' or matchdayOrTeam.lower() == 'mcfc':
+        elif matchdayOrTeam.lower() in cityAliases:
             team = 'Manchester City FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'man united' or matchdayOrTeam.lower() == 'manu' or matchdayOrTeam.lower() == 'man u' or matchdayOrTeam.lower() == 'manchester united' or matchdayOrTeam.lower() == 'mufc' or matchdayOrTeam.lower() == 'united' or matchdayOrTeam.lower() == 'manchester united fc':
+        elif matchdayOrTeam.lower() in unitedAliases:
             team = 'Manchester United FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'newcastle' or matchdayOrTeam.lower() == 'newcastle united fc' or matchdayOrTeam.lower() == 'newcastle united':
+        elif matchdayOrTeam.lower() in newcastleAliases:
             team = 'Newcastle United FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'sheffield' or matchdayOrTeam.lower() == 'sheffield united':
+        elif matchdayOrTeam.lower() in sheffieldAliases:
             team = 'Sheffield United FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'southampton' or matchdayOrTeam.lower() == 'southampton fc':
+        elif matchdayOrTeam.lower() in southamptonAliases:
             team = 'Southampton FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'tottenham fc' or matchdayOrTeam.lower() == 'tottenham hotspur' or matchdayOrTeam.lower() == 'thfc' or matchdayOrTeam.lower() == 'spurs' or matchdayOrTeam.lower() == 'spurs fc' or matchdayOrTeam.lower() == 'tottenham' or matchdayOrTeam.lower() == 'best team in london':
+        elif matchdayOrTeam.lower() in spursAliases:
             team = 'Tottenham Hotspur FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'west brom' or matchdayOrTeam.lower() == 'west bromwich' or matchdayOrTeam.lower() == 'west bromwich albion' or matchdayOrTeam.lower() == 'wbafc':
+        elif matchdayOrTeam.lower() in westBromAliases:
             team = 'West Bromwich Albion FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'west ham' or matchdayOrTeam.lower() == 'west ham united' or matchdayOrTeam.lower() == 'west ham united fc' or matchdayOrTeam.lower() == 'whufc':
+        elif matchdayOrTeam.lower() in westHamAliases:
             team = 'West Ham United FC'
             print(get_team_fix(team))
-        elif matchdayOrTeam.lower() == 'wolves' or matchdayOrTeam.lower() == 'wolverhampton wanderers FC' or matchdayOrTeam.lower() == 'wolverhampton Wanderers':
+        elif matchdayOrTeam.lower() in wolvesAliases:
             team = 'Wolverhampton Wanderers FC'
             print(get_team_fix(team))
 
