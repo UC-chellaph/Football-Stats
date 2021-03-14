@@ -13,16 +13,16 @@ Type Help after loading into the Program for a list of valid commands, several o
 
 |**Valid Commands** | **Result**                                                   | **Aliases**                | **Version Added** |
 |-------------------|--------------------------------------------------------------|----------------------------|-------------------|
-|Fixtures           | Get Fixtures or results for a specific matchday or team      | Fix, Schedule              |-----Version 1-----|
-|Next Week          | Get Next Week's Fixtures                                     |                            |-----Version 1-----|
-|Results            | Get This Week's Results or Fixtures                          | Scores, Score, This Week   |-----Version 1-----|
-|All Fixtures       | Get a team's results from all competitions - from SofaScore  | AllFix, full fix           |-----Version 2-----|
-|Standings          | View the current table                                       | Table                      |-----Version 1-----|
-|Team Info          | Get Info about a team (Currently Unavailable)                |                            |-----Version 1-----|
-|Help               | Get this list of commands                                    | Get Help                   |-----Version 1-----|
-|Team List          | Full list of acceptable teams with spellings                 |                            |-----Version 1-----|
-|Credits            | View Credits for this Project                                | Credit                     |-----Version 1-----|
-|Quit               | Close the Program                                            | Exit                       |-----Version 1-----|
+|Fixtures           | Get Fixtures or results for a specific matchday or team      | Fix, Schedule              |     Version 1     |
+|Next Week          | Get Next Week's Fixtures                                     |                            |     Version 1     |
+|Results            | Get This Week's Results or Fixtures                          | Scores, Score, This Week   |     Version 1     |
+|All Fixtures       | Get a team's results from all competitions - from SofaScore  | AllFix, Full Fix           |     Version 2     |
+|Standings          | View the current table                                       | Table                      |     Version 1     |
+|Team Info          | Get Info about a team (Currently Unavailable)                |                            |     Version 1     |
+|Help               | Get this list of commands                                    | Get Help                   |     Version 1     |
+|Team List          | Full list of acceptable teams with spellings                 |                            |     Version 1     |
+|Credits            | View Credits for this Project                                | Credit                     |     Version 1     |
+|Quit               | Close the Program                                            | Exit                       |     Version 1     |
 
 
  -----
